@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "MenuInterface.h"
+#include "Holoring/HoloringGameInstance.h"
 #include "MenuWidget.generated.h"
 
 /**
@@ -16,12 +16,12 @@ class HOLORING_API UMenuWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	void SetMenuInterface(IMenuInterface* MenuInterface);
+	void SetGameInstance(UHoloringGameInstance* GameInstance);
 	
 	void Setup();
 
 	void Teardown();
 
 protected:
-	IMenuInterface* MenuInterface;
+	UHoloringGameInstance* GameInstance;
 };

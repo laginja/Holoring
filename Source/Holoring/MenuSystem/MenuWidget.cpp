@@ -2,9 +2,9 @@
 
 #include "MenuWidget.h"
 
-void UMenuWidget::SetMenuInterface(IMenuInterface* MenuInterface)
+void UMenuWidget::SetGameInstance(UHoloringGameInstance* GameInstance)
 {
-	this->MenuInterface = MenuInterface;
+	this->GameInstance = GameInstance;
 }
 
 void UMenuWidget::Setup()

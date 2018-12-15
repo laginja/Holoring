@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "OnlineSubsystem.h"
+#include "OnlineSessionInterface.h"
 #include "HoloringGameInstance.generated.h"
 
 /**
@@ -17,10 +19,27 @@ class HOLORING_API UHoloringGameInstance : public UGameInstance
 public:
 	UHoloringGameInstance(const FObjectInitializer & ObjectInitializer);
 	
+	virtual void Init();
+
 	UFUNCTION(BlueprintCallable)
 	void LoadMenuWidget();
 	
+	UFUNCTION(Exec)
+	void Host(FString DesiredServerName);
+	void RefreshServerList();
+
 private:
+	void CreateSession();
+	void OnCreateSessionComplete(FName SessionName, bool Success);
+	void OnDestroySessionComplete(FName SessionName, bool Success);
+	void OnFindSessionsComplete(bool Success);
+
 	TSubclassOf<class UUserWidget> MenuClass;
 	class UMainMenu* Menu;
+
+	IOnlineSessionPtr SessionInterface;
+	FString ServerName;
+
+	// Variable for getting session search results 
+	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 };
