@@ -30,9 +30,11 @@ public:
 
 private:
 	void CreateSession();
+
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 	void OnFindSessionsComplete(bool Success);
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	TSubclassOf<class UUserWidget> MenuClass;
 	class UMainMenu* Menu;

@@ -33,6 +33,8 @@ void UHoloringGameInstance::Init()
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UHoloringGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UHoloringGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UHoloringGameInstance::OnFindSessionsComplete);
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UHoloringGameInstance::OnJoinSessionComplete);
+
 		}
 
 	}
@@ -142,6 +144,10 @@ void UHoloringGameInstance::OnFindSessionsComplete(bool Success)
 		if (SearchResults.Num() > 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found Active sessions"));
+			for (FOnlineSessionSearchResult& SearchResult : SearchResults)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Session ID: %s"), *SearchResult.GetSessionIdStr());
+			}
 		}
 		else
 		{
@@ -149,3 +155,9 @@ void UHoloringGameInstance::OnFindSessionsComplete(bool Success)
 		}
 	}
 }
+
+void UHoloringGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
+{
+	
+}
+
