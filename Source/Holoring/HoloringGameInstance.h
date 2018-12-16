@@ -26,6 +26,9 @@ public:
 	
 	UFUNCTION(Exec)
 	void Host(FString DesiredServerName);
+
+	UFUNCTION(Exec)
+	void Join(uint32 Index);
 	void RefreshServerList();
 
 private:

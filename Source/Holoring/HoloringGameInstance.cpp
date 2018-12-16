@@ -141,13 +141,32 @@ void UHoloringGameInstance::OnFindSessionsComplete(bool Success)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Finished finding sessions"));
 		auto SearchResults = SessionSearch->SearchResults;
+
+		TArray<FServerData> ServerNames;
+
 		if (SearchResults.Num() > 0)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found Active sessions"));
 			for (FOnlineSessionSearchResult& SearchResult : SearchResults)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Session ID: %s"), *SearchResult.GetSessionIdStr());
+				FServerData Data;
+
+				Data.HostUsername = SearchResult.Session.OwningUserName;
+				Data.MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
+				Data.CurrentPlayers = Data.MaxPlayers - SearchResult.Session.NumOpenPublicConnections;			// MAX connections number - FREE connections number
+				FString ServerName;
+				if (SearchResult.Session.SessionSettings.Get(SERVER_NAME_SETTINGS_KEY, ServerName))
+				{
+					Data.Name = ServerName;
+				}
+				else
+				{
+					Data.Name = "Could not find server name";
+				}
+				ServerNames.Add(Data);
 			}
+			Menu->SetServerList(ServerNames);
 		}
 		else
 		{
@@ -156,8 +175,39 @@ void UHoloringGameInstance::OnFindSessionsComplete(bool Success)
 	}
 }
 
+
+void UHoloringGameInstance::Join(uint32 Index)
+{
+	if (!SessionInterface.IsValid()) return;
+	if (!SessionSearch.IsValid()) return;
+
+	if (Menu != nullptr)
+	{
+		Menu->Teardown();
+	}
+
+	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[Index]);
+}
+
 void UHoloringGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
-	
+	if (!SessionInterface.IsValid()) return;
+
+	FString Address;		// OUT param
+	if (!SessionInterface->GetResolvedConnectString(SessionName, Address))		// "za ovaj SessionName daj mi njegovu IP adresu"
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Could not get connect string"));
+		return;
+	}
+
+	UEngine* Engine = GetEngine();
+	if (!ensure(Engine != nullptr)) return;
+
+	Engine->AddOnScreenDebugMessage(0, 5.f, FColor::Red, FString::Printf(TEXT("Joining %s"), *Address));
+
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController != nullptr)) return;
+
+	PlayerController->ClientTravel(*Address, ETravelType::TRAVEL_Absolute);
 }
 
