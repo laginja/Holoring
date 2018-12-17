@@ -137,7 +137,7 @@ void AHoloringCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AHoloringCharacter::LookUpAtRate);
 }
 
-void AHoloringCharacter::OnFire()
+void AHoloringCharacter::OnFire_Implementation()
 {
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
@@ -183,6 +183,11 @@ void AHoloringCharacter::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+}
+
+bool AHoloringCharacter::OnFire_Validate()
+{
+	return true;
 }
 
 void AHoloringCharacter::OnResetVR()
