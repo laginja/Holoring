@@ -40,4 +40,6 @@ void AHoloringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 
 		Destroy();
 	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("Hit actor name: %s"), *Hit.GetActor()->GetName());
 }

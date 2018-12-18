@@ -40,6 +40,15 @@ AHoloringCharacter::AHoloringCharacter()
 	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
 
+	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
+	Mesh3P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh3P"));
+	Mesh3P->SetOnlyOwnerSee(false);
+	Mesh3P->SetupAttachment(FirstPersonCameraComponent);
+	Mesh3P->bCastDynamicShadow = false;
+	Mesh3P->CastShadow = false;
+	Mesh3P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
+	Mesh3P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+
 	// Create a gun mesh component
 	FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
 	FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
@@ -57,7 +66,7 @@ AHoloringCharacter::AHoloringCharacter()
 
 	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
-
+	
 	// Create VR Controllers.
 	R_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("R_MotionController"));
 	R_MotionController->Hand = EControllerHand::Right;
@@ -102,6 +111,9 @@ void AHoloringCharacter::BeginPlay()
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
 	}
+
+	FString Projectile = ProjectileClass->GetName();
+	UE_LOG(LogTemp, Warning, TEXT("Projectile name: %s"), *Projectile);
 }
 
 //////////////////////////////////////////////////////////////////////////
