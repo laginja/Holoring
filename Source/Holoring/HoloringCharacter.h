@@ -56,6 +56,8 @@ protected:
 	virtual void BeginPlay();
 
 public:
+	void DealDammage();		// TODO; finish this
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;

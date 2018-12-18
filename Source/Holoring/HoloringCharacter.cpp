@@ -112,8 +112,13 @@ void AHoloringCharacter::BeginPlay()
 		Mesh1P->SetHiddenInGame(false, true);
 	}
 
+	
 	FString Projectile = ProjectileClass->GetName();
 	UE_LOG(LogTemp, Warning, TEXT("Projectile name: %s"), *Projectile);
+}
+
+void AHoloringCharacter::DealDammage()
+{
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -151,6 +156,7 @@ void AHoloringCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 void AHoloringCharacter::OnFire_Implementation()
 {
+	
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
 	{
@@ -174,7 +180,8 @@ void AHoloringCharacter::OnFire_Implementation()
 				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 				// spawn the projectile at the muzzle
-				World->SpawnActor<AHoloringProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				auto Projectile = World->SpawnActor<AHoloringProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				Projectile->SetProjectileOwner(this);
 			}
 		}
 	}

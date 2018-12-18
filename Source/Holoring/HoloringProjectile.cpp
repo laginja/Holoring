@@ -28,7 +28,7 @@ AHoloringProjectile::AHoloringProjectile()
 	ProjectileMovement->bShouldBounce = true;
 
 	// Die after 3 seconds by default
-	InitialLifeSpan = 3.0f;
+	InitialLifeSpan = 3.0f;	
 }
 
 void AHoloringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -40,6 +40,9 @@ void AHoloringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 
 		Destroy();
 	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("Hit actor name: %s"), *Hit.GetActor()->GetName());
+
+	if (ProjectileOwner != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s shot %s"), *ProjectileOwner->GetName(), *Hit.GetActor()->GetName());
+	}
 }

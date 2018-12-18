@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "HoloringCharacter.h"
 #include "HoloringProjectile.generated.h"
 
 UCLASS(config=Game)
@@ -22,6 +23,8 @@ class AHoloringProjectile : public AActor
 public:
 	AHoloringProjectile();
 
+	void SetProjectileOwner(AHoloringCharacter* ProjectileOwner) { this->ProjectileOwner = ProjectileOwner; };
+
 	/** called when projectile hits something */
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -30,5 +33,8 @@ public:
 	FORCEINLINE class USphereComponent* GetCollisionComp() const { return CollisionComp; }
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE class UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+private:
+	AHoloringCharacter* ProjectileOwner;
 };
 
