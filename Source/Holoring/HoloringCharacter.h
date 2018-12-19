@@ -87,10 +87,17 @@ public:
 	uint32 bUsingMotionControllers : 1;
 
 protected:
-	
 	/** Fires a projectile. */
-	UFUNCTION(Server, Reliable, WithValidation)
 	void OnFire();
+
+	void PlayFireAnimation();
+
+	void PlayFireSound();
+
+	void SpawnProjectile();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_OnFire();
 
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();

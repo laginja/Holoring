@@ -11,6 +11,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 
+#include "UnrealNetwork.h"
+
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 //////////////////////////////////////////////////////////////////////////
@@ -40,14 +42,12 @@ AHoloringCharacter::AHoloringCharacter()
 	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
 
-	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
+	// Create a mesh component that will be used when being viewed from other player's view (when not controlling this pawn)
 	Mesh3P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh3P"));
 	Mesh3P->SetOnlyOwnerSee(false);
 	Mesh3P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh3P->bCastDynamicShadow = false;
 	Mesh3P->CastShadow = false;
-	Mesh3P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-	Mesh3P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
 
 	// Create a gun mesh component
 	FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
@@ -112,9 +112,14 @@ void AHoloringCharacter::BeginPlay()
 		Mesh1P->SetHiddenInGame(false, true);
 	}
 
-	
-	FString Projectile = ProjectileClass->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Projectile name: %s"), *Projectile);
+	if (Role == ROLE_Authority)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("I'm a server"));
+	}
+	else if(Role == ROLE_AutonomousProxy)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("I'm a  client"));
+	}
 }
 
 void AHoloringCharacter::DealDammage()
@@ -154,9 +159,56 @@ void AHoloringCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AHoloringCharacter::LookUpAtRate);
 }
 
-void AHoloringCharacter::OnFire_Implementation()
+void AHoloringCharacter::OnFire()
 {
-	
+	Server_OnFire();							// spawn projectile only on server which then replicates it to the client. Sound and animation executing on server
+	if (Role == ROLE_AutonomousProxy)			// play sound and animation locally
+	{
+		PlayFireSound();
+		PlayFireAnimation();
+	}
+}
+
+void AHoloringCharacter::PlayFireSound()
+{
+	// try and play the sound if specified
+	if (FireSound != NULL)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Sound fired"));
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+	}
+}
+
+void AHoloringCharacter::PlayFireAnimation()
+{
+	// try and play a firing animation if specified
+	if (FireAnimation != NULL)
+	{
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+		if (AnimInstance != NULL)
+		{
+			AnimInstance->Montage_Play(FireAnimation, 1.f);
+		}
+	}
+}
+
+void AHoloringCharacter::Server_OnFire_Implementation()
+{
+	SpawnProjectile();
+
+	PlayFireSound();
+
+	PlayFireAnimation();
+}
+
+bool AHoloringCharacter::Server_OnFire_Validate()
+{
+	return true; 
+}
+
+void AHoloringCharacter::SpawnProjectile()
+{
 	// try and fire a projectile
 	if (ProjectileClass != NULL)
 	{
@@ -180,36 +232,10 @@ void AHoloringCharacter::OnFire_Implementation()
 				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 				// spawn the projectile at the muzzle
-				auto Projectile = World->SpawnActor<AHoloringProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-				if (Projectile != nullptr)
-				{
-					Projectile->SetProjectileOwner(this);
-				}
+				World->SpawnActor<AHoloringProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 			}
 		}
 	}
-
-	// try and play the sound if specified
-	if (FireSound != NULL)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	}
-
-	// try and play a firing animation if specified
-	if (FireAnimation != NULL)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != NULL)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
-	}
-}
-
-bool AHoloringCharacter::OnFire_Validate()
-{
-	return true;
 }
 
 void AHoloringCharacter::OnResetVR()
