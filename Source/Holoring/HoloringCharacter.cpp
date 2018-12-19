@@ -181,7 +181,10 @@ void AHoloringCharacter::OnFire_Implementation()
 
 				// spawn the projectile at the muzzle
 				auto Projectile = World->SpawnActor<AHoloringProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-				Projectile->SetProjectileOwner(this);
+				if (Projectile != nullptr)
+				{
+					Projectile->SetProjectileOwner(this);
+				}
 			}
 		}
 	}
