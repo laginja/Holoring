@@ -49,15 +49,25 @@ class AHoloringCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMotionControllerComponent* L_MotionController;
 
+	UPROPERTY(Replicated)
+	FString Ime;
+
 public:
 	AHoloringCharacter();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(ReplicatedUsing = OnRep_ShotFired)
+	uint32 bShotFired : 1;
+
+	UFUNCTION()
+	void OnRep_ShotFired();
 
 protected:
 	virtual void BeginPlay();
 
 public:
-	void DealDammage();		// TODO; finish this
-
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;

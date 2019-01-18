@@ -12,6 +12,7 @@
 #include "MotionControllerComponent.h"
 
 #include "UnrealNetwork.h"
+#include "DrawDebugHelpers.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -20,6 +21,10 @@ DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 AHoloringCharacter::AHoloringCharacter()
 {
+	if (HasAuthority()) {
+		this->SetReplicates(true);
+	}
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
@@ -90,6 +95,9 @@ AHoloringCharacter::AHoloringCharacter()
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
+
+	Ime = "Matko";
+	bShotFired = false;
 }
 
 void AHoloringCharacter::BeginPlay()
@@ -122,8 +130,43 @@ void AHoloringCharacter::BeginPlay()
 	}
 }
 
-void AHoloringCharacter::DealDammage()
+void AHoloringCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const		// ne mijenjaj ime argumenta
 {
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);		// potrebno je pozvati 'Super' metodu kako bi ispravno radili ispisi actor roles
+	DOREPLIFETIME(AHoloringCharacter, bShotFired);		// ovaj makro prihvaca varijablu za replikaciju. Replicira 'ServerState'; kad god se ta varijabla postavi na serveru, svi klijenti ce vidjeti tu vrijednost
+																// i moci postaviti svoju vrijednost transformacije na tu vrijednost
+	DOREPLIFETIME(AHoloringCharacter, Ime);
+}
+
+void AHoloringCharacter::OnRep_ShotFired()			// izvrsava se samo na klijentu pa server ni ne vidi nikakve promjene
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnRep_ShouldPlay() fired!"));
+	PlayFireAnimation();
+	PlayFireSound();
+}
+
+FString GetEnumText(ENetRole Role)
+{
+	switch (Role)
+	{
+	case ROLE_None:
+		return "None";
+	case ROLE_SimulatedProxy:
+		return "SimulatedProxy";
+	case ROLE_AutonomousProxy:
+		return "AutonomousProxy";
+	case ROLE_Authority:
+		return "Authority";
+	default:
+		return "Error";
+	}
+}
+
+void AHoloringCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	DrawDebugString(GetWorld(), FVector(0, 0, 100), Ime, this, FColor::White, DeltaTime);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -161,12 +204,16 @@ void AHoloringCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 void AHoloringCharacter::OnFire()
 {
-	Server_OnFire();							// spawn projectile only on server which then replicates it to the client. Sound and animation executing on server
-	if (Role == ROLE_AutonomousProxy)			// play sound and animation locally
+	if (Role == ROLE_AutonomousProxy)
 	{
-		PlayFireSound();
-		PlayFireAnimation();
+		Server_OnFire();
 	}
+}
+
+void AHoloringCharacter::Server_OnFire_Implementation()
+{
+	SpawnProjectile();
+	bShotFired = !bShotFired;
 }
 
 void AHoloringCharacter::PlayFireSound()
@@ -179,27 +226,20 @@ void AHoloringCharacter::PlayFireSound()
 	}
 }
 
-void AHoloringCharacter::PlayFireAnimation()
+void AHoloringCharacter::PlayFireAnimation()   
 {
 	// try and play a firing animation if specified
 	if (FireAnimation != NULL)
 	{
 		// Get the animation object for the arms mesh
 		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+		
 		if (AnimInstance != NULL)
 		{
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
+			UE_LOG(LogTemp, Warning, TEXT("Animation fired"));
 		}
 	}
-}
-
-void AHoloringCharacter::Server_OnFire_Implementation()
-{
-	SpawnProjectile();
-
-	PlayFireSound();
-
-	PlayFireAnimation();
 }
 
 bool AHoloringCharacter::Server_OnFire_Validate()
