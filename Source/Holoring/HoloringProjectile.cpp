@@ -43,7 +43,7 @@ void AHoloringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 
 	if (ProjectileOwner != nullptr)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("%s shot %s"), *ProjectileOwner->GetName(), *Hit.GetActor()->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("%s shot %s"), *ProjectileOwner->GetName(), *Hit.GetActor()->GetName());
 	}
 
 	//UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.GetActor()->GetClass()->GetName());

@@ -133,7 +133,7 @@ void AHoloringCharacter::BeginPlay()
 void AHoloringCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const		// ne mijenjaj ime argumenta
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);		// potrebno je pozvati 'Super' metodu kako bi ispravno radili ispisi actor roles
-	DOREPLIFETIME(AHoloringCharacter, bShotFired);		// ovaj makro prihvaca varijablu za replikaciju. Replicira 'ServerState'; kad god se ta varijabla postavi na serveru, svi klijenti ce vidjeti tu vrijednost
+	DOREPLIFETIME(AHoloringCharacter, bShotFired);				// ovaj makro prihvaca varijablu za replikaciju. Replicira 'bShotFired'; kad god se ta varijabla postavi na serveru, svi klijenti ce vidjeti tu vrijednost
 																// i moci postaviti svoju vrijednost transformacije na tu vrijednost
 	DOREPLIFETIME(AHoloringCharacter, Ime);
 }
@@ -272,7 +272,9 @@ void AHoloringCharacter::SpawnProjectile()
 				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 				// spawn the projectile at the muzzle
-				World->SpawnActor<AHoloringProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				auto Projectile = World->SpawnActor<AHoloringProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				// Set the owner of projectile
+				Projectile->SetProjectileOwner(this);
 			}
 		}
 	}
