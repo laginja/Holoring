@@ -145,6 +145,21 @@ void AHoloringCharacter::OnRep_ShotFired()			// izvrsava se samo na klijentu pa 
 	PlayFireSound();
 }
 
+float AHoloringCharacter::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
+	int32 DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
+
+	CurrentHealth -= DamageToApply;
+	if (CurrentHealth <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Character died!"), DamageAmount, DamageToApply)
+	}
+	
+
+	return DamageToApply;
+}
+
 FString GetEnumText(ENetRole Role)
 {
 	switch (Role)

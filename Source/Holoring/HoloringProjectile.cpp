@@ -4,6 +4,8 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
+#include "Kismet/GameplayStatics.h"
+
 AHoloringProjectile::AHoloringProjectile() 
 {
 	// Use a sphere as a simple collision representation
@@ -43,8 +45,12 @@ void AHoloringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 
 	if (ProjectileOwner != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s shot %s"), *ProjectileOwner->GetName(), *Hit.GetActor()->GetName());
-	}
+		// TODO; check who we hit
+		UGameplayStatics::ApplyPointDamage(Hit.GetActor(), HitDamage, this->GetActorForwardVector(), Hit, GetInstigatorController(), this, UDamageType::StaticClass());
 
+		UE_LOG(LogTemp, Warning, TEXT("%s shot %s"), *ProjectileOwner->GetName(), *Hit.GetActor()->GetName());
+
+		Destroy();
+	}
 	//UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.GetActor()->GetClass()->GetName());
 }

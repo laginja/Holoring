@@ -52,6 +52,12 @@ class AHoloringCharacter : public ACharacter
 	UPROPERTY(Replicated)
 	FString Ime;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int StartingHealth = 100;
+
+	UPROPERTY(VisibleAnywhere, Category = "Health")
+	int CurrentHealth = StartingHealth;
+
 public:
 	AHoloringCharacter();
 
@@ -63,6 +69,9 @@ public:
 
 	UFUNCTION()
 	void OnRep_ShotFired();
+
+	// Called by the engine when actor damage is dealt
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser) override;
 
 protected:
 	virtual void BeginPlay();

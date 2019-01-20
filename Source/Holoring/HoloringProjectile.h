@@ -20,8 +20,6 @@ class AHoloringProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	class UProjectileMovementComponent* ProjectileMovement;
 
-
-
 public:
 	AHoloringProjectile();
 
@@ -36,10 +34,10 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE class UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
-	UPROPERTY(Category = "Damage", EditDefaultsOnly, BlueprintReadOnly)
-	float HitDamage = 10.0;
-
 private:
 	AHoloringCharacter* ProjectileOwner;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float HitDamage = 10.0;
 };
 
