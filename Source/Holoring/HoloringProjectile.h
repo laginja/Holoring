@@ -38,6 +38,6 @@ private:
 	AHoloringCharacter* ProjectileOwner;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	float HitDamage = 10.0;
+	float ProjectileDamage = 10.0;
 };
 

@@ -55,7 +55,7 @@ class AHoloringCharacter : public ACharacter
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int StartingHealth = 100;
 
-	UPROPERTY(VisibleAnywhere, Category = "Health")
+	UPROPERTY(VisibleAnywhere, Category = "Health", Replicated)
 	int CurrentHealth = StartingHealth;
 
 public:
@@ -72,6 +72,10 @@ public:
 
 	// Called by the engine when actor damage is dealt
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser) override;
+
+	// Returns current health as a percentage of starting health, between 0 and 1
+	UFUNCTION(BlueprintPure, Category = "Health")
+	float GetHealthPercent() const;
 
 protected:
 	virtual void BeginPlay();

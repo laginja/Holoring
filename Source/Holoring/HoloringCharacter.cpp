@@ -136,6 +136,7 @@ void AHoloringCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > 
 	DOREPLIFETIME(AHoloringCharacter, bShotFired);				// ovaj makro prihvaca varijablu za replikaciju. Replicira 'bShotFired'; kad god se ta varijabla postavi na serveru, svi klijenti ce vidjeti tu vrijednost
 																// i moci postaviti svoju vrijednost transformacije na tu vrijednost
 	DOREPLIFETIME(AHoloringCharacter, Ime);
+	DOREPLIFETIME(AHoloringCharacter, CurrentHealth);
 }
 
 void AHoloringCharacter::OnRep_ShotFired()			// izvrsava se samo na klijentu pa server ni ne vidi nikakve promjene
@@ -294,6 +295,17 @@ void AHoloringCharacter::SpawnProjectile()
 		}
 	}
 }
+
+float AHoloringCharacter::GetHealthPercent() const
+{
+	return (float)CurrentHealth / (float)StartingHealth;
+}
+
+
+
+
+
+
 
 void AHoloringCharacter::OnResetVR()
 {

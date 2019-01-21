@@ -46,7 +46,7 @@ void AHoloringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 	if (ProjectileOwner != nullptr)
 	{
 		// TODO; check who we hit
-		UGameplayStatics::ApplyPointDamage(Hit.GetActor(), HitDamage, this->GetActorForwardVector(), Hit, GetInstigatorController(), this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyPointDamage(Hit.GetActor(), ProjectileDamage, this->GetActorForwardVector(), Hit, GetInstigatorController(), this, UDamageType::StaticClass());
 
 		UE_LOG(LogTemp, Warning, TEXT("%s shot %s"), *ProjectileOwner->GetName(), *Hit.GetActor()->GetName());
 
