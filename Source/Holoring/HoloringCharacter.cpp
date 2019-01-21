@@ -154,7 +154,7 @@ float AHoloringCharacter::TakeDamage(float DamageAmount, FDamageEvent const & Da
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Character died!"), DamageAmount, DamageToApply)
+		OnDeath.Broadcast();
 	}
 	
 

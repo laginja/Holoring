@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "HoloringCharacter.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterDelegate);		// koristimo delegate kako bi mogli PlayerControlleru javiti da je characted umro. Moze se koristiti i kod Steam achievementa npr.
+
 class UInputComponent;
 
 UCLASS(config=Game)
@@ -76,6 +79,8 @@ public:
 	// Returns current health as a percentage of starting health, between 0 and 1
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetHealthPercent() const;
+
+	FCharacterDelegate OnDeath;
 
 protected:
 	virtual void BeginPlay();

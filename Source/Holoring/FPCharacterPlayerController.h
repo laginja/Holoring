@@ -14,7 +14,9 @@ class HOLORING_API AFPCharacterPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+private: 
+	virtual void SetPawn(APawn* InPawn) override;		// This method is called when the controlles possesses a character. Using it to subscribe to characters OnDeath event.
 	
-	
-	
+	UFUNCTION()
+	void OnCharacterDeath();
 };
