@@ -63,6 +63,8 @@ class AHoloringCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, Category = "Health", Replicated)
 	int CurrentHealth = StartingHealth;
 
+	AFPCharacterPlayerController* CharacterPlayerController = nullptr;
+
 public:
 	AHoloringCharacter();
 
@@ -82,17 +84,18 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetHealthPercent() const;
 
+	// Used in FPCharacterPlayerController to set the PlayerController responsible for a character
+	void SetThisPlayerController(AFPCharacterPlayerController* InPlayerController);
+
+	// Return AFPCharacterPlayerController* to a blueprint which respawns the player
+	UFUNCTION(BlueprintPure, Category = "Setup")
+	AFPCharacterPlayerController* GetThisPlayerController() { return CharacterPlayerController; };
+
+	// Delegate called when a player dies
 	FCharacterDelegate OnDeath;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	uint32 bIsDead : 1;
-
-	void SetThisPlayerController(AFPCharacterPlayerController* InPlayerController);
-
-	AFPCharacterPlayerController* CharacterPlayerController = nullptr;
-
-	UFUNCTION(BlueprintPure, Category = "Setup")
-	AFPCharacterPlayerController* GetThisPlayerController() { return CharacterPlayerController; };
 
 protected:
 	virtual void BeginPlay();

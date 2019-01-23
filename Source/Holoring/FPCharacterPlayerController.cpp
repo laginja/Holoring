@@ -14,6 +14,8 @@ void AFPCharacterPlayerController::SetPawn(APawn* InPawn)
 
 		// Subscribe our local method to the character's death event
 		PossessedCharacter->OnDeath.AddUniqueDynamic(this, &AFPCharacterPlayerController::OnCharacterDeath);
+		
+		// Forward this controller to the possessed character
 		PossessedCharacter->SetThisPlayerController(this);
 	}
 }
