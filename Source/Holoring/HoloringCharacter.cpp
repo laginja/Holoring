@@ -231,8 +231,17 @@ void AHoloringCharacter::OnFire()
 {
 	if (Role == ROLE_AutonomousProxy)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Client shooting"));
 		Server_OnFire();
 	}
+	/*else if (Role == ROLE_Authority)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Server shooting"));
+		PlayFireSound();
+		PlayFireAnimation();
+		SpawnProjectile();
+		bShotFired = !bShotFired;
+	}*/
 }
 
 void AHoloringCharacter::Server_OnFire_Implementation()

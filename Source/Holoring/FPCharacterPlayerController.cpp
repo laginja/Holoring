@@ -23,4 +23,6 @@ void AFPCharacterPlayerController::SetPawn(APawn* InPawn)
 void AFPCharacterPlayerController::OnCharacterDeath()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Received!"))
+	this->PlayerDied(this);
 }
+

@@ -19,4 +19,8 @@ private:
 	
 	UFUNCTION()
 	void OnCharacterDeath();
+
+public:
+	UFUNCTION(BlueprintImplementableEvent, Category = "Player Handling")
+	void PlayerDied(AFPCharacterPlayerController* PlayerController);
 };
