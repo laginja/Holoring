@@ -98,6 +98,7 @@ AHoloringCharacter::AHoloringCharacter()
 
 	Ime = "Matko";
 	bShotFired = false;
+	bIsDead = false;
 }
 
 void AHoloringCharacter::BeginPlay()
@@ -155,9 +156,9 @@ float AHoloringCharacter::TakeDamage(float DamageAmount, FDamageEvent const & Da
 	if (CurrentHealth <= 0)
 	{
 		OnDeath.Broadcast();
+		bIsDead = true;
 	}
 	
-
 	return DamageToApply;
 }
 
@@ -187,6 +188,14 @@ void AHoloringCharacter::Tick(float DeltaTime)
 
 //////////////////////////////////////////////////////////////////////////
 // Input
+
+void AHoloringCharacter::SetThisPlayerController(AFPCharacterPlayerController * InPlayerController)
+{
+	if (InPlayerController)
+	{
+		CharacterPlayerController = InPlayerController;
+	}
+}
 
 void AHoloringCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {

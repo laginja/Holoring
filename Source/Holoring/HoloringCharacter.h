@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "FPCharacterPlayerController.h"
+
 #include "HoloringCharacter.generated.h"
 
 
@@ -81,6 +83,16 @@ public:
 	float GetHealthPercent() const;
 
 	FCharacterDelegate OnDeath;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	uint32 bIsDead : 1;
+
+	void SetThisPlayerController(AFPCharacterPlayerController* InPlayerController);
+
+	AFPCharacterPlayerController* CharacterPlayerController = nullptr;
+
+	UFUNCTION(BlueprintPure, Category = "Setup")
+	AFPCharacterPlayerController* GetThisPlayerController() { return CharacterPlayerController; };
 
 protected:
 	virtual void BeginPlay();
