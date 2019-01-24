@@ -152,31 +152,19 @@ float AHoloringCharacter::TakeDamage(float DamageAmount, FDamageEvent const & Da
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
 	int32 DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
 
+	
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0)
 	{
-		OnDeath.Broadcast();
+		auto Eliminator = Cast<AHoloringCharacter>(EventInstigator->GetPawn());
+		Eliminator->OnKill.Broadcast();
+		UE_LOG(LogTemp, Warning, TEXT("I got killed by: %s"), *EventInstigator->GetPawn()->GetName());
+		
 		bIsDead = true;
+		OnDeath.Broadcast();
 	}
 	
 	return DamageToApply;
-}
-
-FString GetEnumText(ENetRole Role)
-{
-	switch (Role)
-	{
-	case ROLE_None:
-		return "None";
-	case ROLE_SimulatedProxy:
-		return "SimulatedProxy";
-	case ROLE_AutonomousProxy:
-		return "AutonomousProxy";
-	case ROLE_Authority:
-		return "Authority";
-	default:
-		return "Error";
-	}
 }
 
 void AHoloringCharacter::Tick(float DeltaTime)
@@ -231,7 +219,7 @@ void AHoloringCharacter::OnFire()
 {
 	if (Role == ROLE_AutonomousProxy)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Client shooting"));
+		//UE_LOG(LogTemp, Warning, TEXT("Client shooting"));
 		Server_OnFire();
 	}
 	/*else if (Role == ROLE_Authority)
@@ -255,7 +243,6 @@ void AHoloringCharacter::PlayFireSound()
 	// try and play the sound if specified
 	if (FireSound != NULL)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Sound fired"));
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 	}
 }
@@ -271,7 +258,6 @@ void AHoloringCharacter::PlayFireAnimation()
 		if (AnimInstance != NULL)
 		{
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
-			UE_LOG(LogTemp, Warning, TEXT("Animation fired"));
 		}
 	}
 }

@@ -20,7 +20,13 @@ private:
 	UFUNCTION()
 	void OnCharacterDeath();
 
+	UFUNCTION()
+	void OnScoredKill();
+
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Player Handling")
 	void PlayerDied(AFPCharacterPlayerController* PlayerController);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Player Handling")
+	void IncreaseScore();
 };

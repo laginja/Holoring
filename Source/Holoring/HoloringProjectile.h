@@ -34,6 +34,8 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE class UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
+	AHoloringCharacter* GetProjectileOwner() { return ProjectileOwner; };
+
 private:
 	AHoloringCharacter* ProjectileOwner;
 

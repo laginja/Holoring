@@ -15,6 +15,9 @@ void AFPCharacterPlayerController::SetPawn(APawn* InPawn)
 		// Subscribe our local method to the character's death event
 		PossessedCharacter->OnDeath.AddUniqueDynamic(this, &AFPCharacterPlayerController::OnCharacterDeath);
 		
+		// Subscribe our local method to the when the character scores a kill
+		PossessedCharacter->OnKill.AddUniqueDynamic(this, &AFPCharacterPlayerController::OnScoredKill);
+
 		// Forward this controller to the possessed character
 		PossessedCharacter->SetThisPlayerController(this);
 	}
@@ -22,7 +25,13 @@ void AFPCharacterPlayerController::SetPawn(APawn* InPawn)
 
 void AFPCharacterPlayerController::OnCharacterDeath()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Received!"))
-	this->PlayerDied(this);
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *this->GetPawn()->GetName());
+	PlayerDied(this);
+}
+
+void AFPCharacterPlayerController::OnScoredKill()
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *this->GetPawn()->GetName());
+	IncreaseScore();
 }
 

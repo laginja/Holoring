@@ -94,8 +94,13 @@ public:
 	// Delegate called when a player dies
 	FCharacterDelegate OnDeath;
 
+	// Delegate called when a player scores a kill
+	FCharacterDelegate OnKill;
+
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	uint32 bIsDead : 1;
+
+	int GetCurrentHealth() { return CurrentHealth; };
 
 protected:
 	virtual void BeginPlay();
