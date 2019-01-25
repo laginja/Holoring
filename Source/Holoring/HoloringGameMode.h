@@ -13,6 +13,9 @@ class AHoloringGameMode : public AGameModeBase
 
 public:
 	AHoloringGameMode();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadGameEndLevel();
 };
 
 

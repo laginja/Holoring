@@ -151,7 +151,6 @@ float AHoloringCharacter::TakeDamage(float DamageAmount, FDamageEvent const & Da
 {
 	int32 DamagePoints = FPlatformMath::RoundToInt(DamageAmount);
 	int32 DamageToApply = FMath::Clamp(DamagePoints, 0, CurrentHealth);
-
 	
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0)
@@ -222,19 +221,21 @@ void AHoloringCharacter::OnFire()
 		//UE_LOG(LogTemp, Warning, TEXT("Client shooting"));
 		Server_OnFire();
 	}
-	/*else if (Role == ROLE_Authority)
+	else if (Role == ROLE_Authority)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Server shooting"));
 		PlayFireSound();
 		PlayFireAnimation();
 		SpawnProjectile();
 		bShotFired = !bShotFired;
-	}*/
+	}
 }
 
 void AHoloringCharacter::Server_OnFire_Implementation()
 {
 	SpawnProjectile();
+	PlayFireAnimation();
+	PlayFireSound();
 	bShotFired = !bShotFired;
 }
 
@@ -257,6 +258,7 @@ void AHoloringCharacter::PlayFireAnimation()
 		
 		if (AnimInstance != NULL)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Animation Played"));
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
