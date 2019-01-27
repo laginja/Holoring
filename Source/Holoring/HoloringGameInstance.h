@@ -23,6 +23,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void LoadMenuWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadEndGameMenuWidget();
 	
 	UFUNCTION(Exec)
 	void Host(FString DesiredServerName);
@@ -30,6 +33,8 @@ public:
 	UFUNCTION(Exec)
 	void Join(uint32 Index);
 	void RefreshServerList();
+
+	void DestroySession();
 
 private:
 	void CreateSession();
@@ -40,7 +45,9 @@ private:
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	TSubclassOf<class UUserWidget> MenuClass;
+	TSubclassOf<class UUserWidget> EndGameMenuClass;
 	class UMainMenu* Menu;
+	class UEndGameMenu* EndGameMenu;
 
 	IOnlineSessionPtr SessionInterface;
 	FString ServerName;

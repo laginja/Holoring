@@ -6,6 +6,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
 #include "MenuSystem/MainMenu.h"
+#include "MenuSystem/EndGameMenu.h"
 #include "OnlineSessionSettings.h"
 
 const static FName SESSION_NAME = NAME_GameSession;
@@ -16,8 +17,13 @@ UHoloringGameInstance::UHoloringGameInstance(const FObjectInitializer & ObjectIn
 	// Get BP widget class
 	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/WBP_MainMenu"));
 
+	ConstructorHelpers::FClassFinder<UUserWidget> EndGameMenuBPClass(TEXT("/Game/WBP_EndGameMenu"));
+
 	if (!ensure(MenuBPClass.Class != nullptr)) return;
 	MenuClass = MenuBPClass.Class;
+
+	if (!ensure(EndGameMenuBPClass.Class != nullptr)) return;
+	EndGameMenuClass = EndGameMenuBPClass.Class;
 }
 
 void UHoloringGameInstance::Init()
@@ -55,6 +61,17 @@ void UHoloringGameInstance::LoadMenuWidget()
 	Menu->SetGameInstance(this);
 }
 
+void UHoloringGameInstance::LoadEndGameMenuWidget()
+{
+	if (!ensure(EndGameMenuClass != nullptr)) return;
+
+	EndGameMenu = CreateWidget<UEndGameMenu>(this, EndGameMenuClass);
+	if (!ensure(EndGameMenu != nullptr)) return;
+
+	EndGameMenu->Setup();
+	EndGameMenu->SetGameInstance(this);
+}
+
 void UHoloringGameInstance::Host(FString DesiredServerName)
 {
 	ServerName = DesiredServerName;
@@ -65,6 +82,7 @@ void UHoloringGameInstance::Host(FString DesiredServerName)
 		if (ExistingSession != nullptr)
 		{
 			SessionInterface->DestroySession(SESSION_NAME);
+			CreateSession();
 		}
 		else
 		{
@@ -94,6 +112,18 @@ void UHoloringGameInstance::CreateSession()
 	}
 }
 
+void UHoloringGameInstance::DestroySession()
+{
+	if (SessionInterface.IsValid())
+	{
+		FNamedOnlineSession* ExistingSession = SessionInterface->GetNamedSession(SESSION_NAME);
+		if (ExistingSession != nullptr)
+		{
+			SessionInterface->DestroySession(SESSION_NAME);
+		}
+	}
+}
+
 void UHoloringGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 {
 	if (!Success)
@@ -119,7 +149,8 @@ void UHoloringGameInstance::OnDestroySessionComplete(FName SessionName, bool Suc
 {
 	if (Success)
 	{
-		CreateSession();
+		//CreateSession();
+		UE_LOG(LogTemp, Warning, TEXT("Session destroyed!"));
 	}
 }
 

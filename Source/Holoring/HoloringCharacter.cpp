@@ -169,7 +169,7 @@ float AHoloringCharacter::TakeDamage(float DamageAmount, FDamageEvent const & Da
 void AHoloringCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	DrawDebugString(GetWorld(), FVector(0, 0, 100), Ime, this, FColor::White, DeltaTime);
 }
 
