@@ -131,6 +131,16 @@ void AHoloringCharacter::BeginPlay()
 	}
 }
 
+void AHoloringCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	DrawDebugString(GetWorld(), FVector(0, 0, 100), Ime, this, FColor::White, DeltaTime);
+
+	FirstPersonCameraComponent->SetWorldRotation(GetViewRotation());
+	AimRotation = GetViewRotation();
+}
+
 void AHoloringCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const		// ne mijenjaj ime argumenta
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);		// potrebno je pozvati 'Super' metodu kako bi ispravno radili ispisi actor roles
@@ -166,12 +176,6 @@ float AHoloringCharacter::TakeDamage(float DamageAmount, FDamageEvent const & Da
 	return DamageToApply;
 }
 
-void AHoloringCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-	DrawDebugString(GetWorld(), FVector(0, 0, 100), Ime, this, FColor::White, DeltaTime);
-}
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -307,6 +311,23 @@ float AHoloringCharacter::GetHealthPercent() const
 	return (float)CurrentHealth / (float)StartingHealth;
 }
 
+
+FRotator AHoloringCharacter::GetViewRotation() const
+{
+	// if we have a controller we are on a server on an owning client
+	if (Controller)
+	{
+		return Controller->GetControlRotation();
+	}
+		
+	// else we are on a non owning client
+	return FRotator(RemoteViewPitch / 255.f * 360.f, GetActorRotation().Yaw, 0.f);
+}
+
+FRotator AHoloringCharacter::GetAimRotation()
+{
+	return AimRotation;
+}
 
 
 

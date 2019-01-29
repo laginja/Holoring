@@ -65,6 +65,9 @@ class AHoloringCharacter : public ACharacter
 
 	AFPCharacterPlayerController* CharacterPlayerController = nullptr;
 
+	UPROPERTY(VisibleAnywhere)
+	FRotator AimRotation;
+
 public:
 	AHoloringCharacter();
 
@@ -101,6 +104,12 @@ public:
 	uint32 bIsDead : 1;
 
 	int GetCurrentHealth() { return CurrentHealth; };
+
+	// Function for getting character pitch value
+	FRotator GetViewRotation() const override;
+
+	UFUNCTION(BlueprintPure)
+	FRotator GetAimRotation();
 
 protected:
 	virtual void BeginPlay();
