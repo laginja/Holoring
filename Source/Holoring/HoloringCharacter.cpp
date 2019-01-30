@@ -299,8 +299,12 @@ void AHoloringCharacter::SpawnProjectile()
 
 				// spawn the projectile at the muzzle
 				auto Projectile = World->SpawnActor<AHoloringProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				
 				// Set the owner of projectile
-				Projectile->SetProjectileOwner(this);
+				if (Projectile)
+				{
+					Projectile->SetProjectileOwner(this);
+				}
 			}
 		}
 	}

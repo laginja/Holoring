@@ -42,7 +42,6 @@ void UHoloringGameInstance::Init()
 			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UHoloringGameInstance::OnJoinSessionComplete);
 
 		}
-
 	}
 	else
 	{
