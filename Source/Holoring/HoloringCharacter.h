@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "FPCharacterPlayerController.h"
 
 #include "HoloringCharacter.generated.h"
 
@@ -12,6 +11,8 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterDelegate);		// koristimo delegate kako bi mogli PlayerControlleru javiti da je characted umro. Moze se koristiti i kod Steam achievementa npr.
 
 class UInputComponent;
+class AFPCharacterPlayerController;
+class AHoloringProjectile;
 
 UCLASS(config=Game)
 class AHoloringCharacter : public ACharacter
@@ -58,6 +59,9 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// Projectile that spawns
+	AHoloringProjectile* Projectile;
 
 	UPROPERTY(ReplicatedUsing = OnRep_ShotFired)
 	uint32 bShotFired : 1;
@@ -167,8 +171,6 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
-
-public:
 	
 
 };

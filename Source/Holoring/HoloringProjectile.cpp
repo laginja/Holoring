@@ -46,7 +46,7 @@ void AHoloringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 	if (ProjectileOwner != nullptr)
 	{
 		// TODO; check who we hit
-		UGameplayStatics::ApplyPointDamage(Hit.GetActor(), ProjectileDamage, this->GetActorForwardVector(), Hit, ProjectileOwner->GetThisPlayerController(), this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyPointDamage(Hit.GetActor(), ProjectileDamage, this->GetActorForwardVector(), Hit, ProjectileOwner->GetController(), this, UDamageType::StaticClass());
 		
 		// Check if a player was hit
 		if (auto Player = Cast<AHoloringCharacter>(Hit.GetActor()))		
@@ -55,5 +55,4 @@ void AHoloringProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 		}
 		Destroy();
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.GetActor()->GetClass()->GetName());
 }

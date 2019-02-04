@@ -10,11 +10,11 @@ AHoloringGameMode::AHoloringGameMode()
 	: Super()
 {
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"));
-	DefaultPawnClass = PlayerPawnClassFinder.Class;
+	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"));			// problem with this line (stuck loading at 73%) 
+	//DefaultPawnClass = PlayerPawnClassFinder.Class;																								// maybe because of circular refrences
 
 	// use our custom HUD class
-	HUDClass = AHoloringHUD::StaticClass();
+	//HUDClass = AHoloringHUD::StaticClass();
 }
 
 void AHoloringGameMode::LoadGameEndLevel()

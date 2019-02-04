@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "HoloringCharacter.h"
+#include "HoloringCharacter.h"				// possible circular dependency error
 #include "HoloringProjectile.generated.h"
 
 UCLASS(config=Game)
@@ -20,6 +20,11 @@ class AHoloringProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	class UProjectileMovementComponent* ProjectileMovement;
 
+	class AHoloringCharacter* ProjectileOwner;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float ProjectileDamage = 10.0;
+
 public:
 	AHoloringProjectile();
 
@@ -34,12 +39,7 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE class UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
-	AHoloringCharacter* GetProjectileOwner() { return ProjectileOwner; };
-
-private:
-	AHoloringCharacter* ProjectileOwner;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	float ProjectileDamage = 10.0;
+	//AHoloringCharacter* GetProjectileOwner() { return ProjectileOwner; };
+	
 };
 
