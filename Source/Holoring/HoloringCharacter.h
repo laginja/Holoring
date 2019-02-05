@@ -97,6 +97,7 @@ public:
 	// Function for getting character pitch value
 	FRotator GetViewRotation() const override;
 
+	// Returns controller rotation
 	UFUNCTION(BlueprintPure)
 	FRotator GetAimRotation();
 
