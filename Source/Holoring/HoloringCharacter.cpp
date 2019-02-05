@@ -105,7 +105,8 @@ void AHoloringCharacter::Tick(float DeltaTime)
 
 	DrawDebugString(GetWorld(), FVector(0, 0, 100), Ime, this, FColor::White, DeltaTime);
 
-	FirstPersonCameraComponent->SetWorldRotation(GetViewRotation());
+	//FirstPersonCameraComponent->SetWorldRotation(GetViewRotation());
+
 	AimRotation = GetViewRotation();
 }
 

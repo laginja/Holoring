@@ -13,7 +13,7 @@
 UMainMenu::UMainMenu(const FObjectInitializer & ObjectInitializer)
 {
 	// A way to get ahold of a BP class
-	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/WBP_ServerRow"));
+	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/Menu/WBP_ServerRow"));
 	if (!ensure(ServerRowBPClass.Class != nullptr)) return;
 
 	ServerRowClass = ServerRowBPClass.Class;

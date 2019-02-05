@@ -15,9 +15,9 @@ const static FName SERVER_NAME_SETTINGS_KEY = TEXT("ServerName");
 UHoloringGameInstance::UHoloringGameInstance(const FObjectInitializer & ObjectInitializer)
 {
 	// Get BP widget class
-	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/WBP_MainMenu"));
+	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/Menu/WBP_MainMenu"));
 
-	ConstructorHelpers::FClassFinder<UUserWidget> EndGameMenuBPClass(TEXT("/Game/WBP_EndGameMenu"));
+	ConstructorHelpers::FClassFinder<UUserWidget> EndGameMenuBPClass(TEXT("/Game/Menu/WBP_EndGameMenu"));
 
 	if (!ensure(MenuBPClass.Class != nullptr)) return;
 	MenuClass = MenuBPClass.Class;
@@ -141,7 +141,7 @@ void UHoloringGameInstance::OnCreateSessionComplete(FName SessionName, bool Succ
 
 	UWorld* World = GetWorld();
 	if (!ensure(World != nullptr)) return;
-	World->ServerTravel("/Game/FirstPersonCPP/Maps/FirstPersonExampleMap?listen");
+	World->ServerTravel("/Game/Maps/FirstPersonExampleMap?listen");
 }
 
 void UHoloringGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
