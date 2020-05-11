@@ -141,7 +141,7 @@ void UHoloringGameInstance::OnCreateSessionComplete(FName SessionName, bool Succ
 
 	UWorld* World = GetWorld();
 	if (!ensure(World != nullptr)) return;
-	World->ServerTravel("/Game/Maps/FirstPersonExampleMap?listen");
+	World->ServerTravel("/Game/Maps/MainLevel/MainLevel?listen");
 }
 
 void UHoloringGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
