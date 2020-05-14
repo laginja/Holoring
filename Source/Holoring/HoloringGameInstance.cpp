@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MenuSystem/MainMenu.h"
 #include "MenuSystem/EndGameMenu.h"
+#include "MenuSystem/Lobby.h"
 #include "OnlineSessionSettings.h"
 
 const static FName SESSION_NAME = NAME_GameSession;
@@ -19,11 +20,16 @@ UHoloringGameInstance::UHoloringGameInstance(const FObjectInitializer & ObjectIn
 
 	ConstructorHelpers::FClassFinder<UUserWidget> EndGameMenuBPClass(TEXT("/Game/Menu/WBP_EndGameMenu"));
 
+	ConstructorHelpers::FClassFinder<UUserWidget> LobbyBPClass(TEXT("/Game/Menu/WBP_Lobby"));
+
 	if (!ensure(MenuBPClass.Class != nullptr)) return;
 	MenuClass = MenuBPClass.Class;
 
 	if (!ensure(EndGameMenuBPClass.Class != nullptr)) return;
 	EndGameMenuClass = EndGameMenuBPClass.Class;
+
+	if (!ensure(LobbyBPClass.Class != nullptr)) return;
+	LobbyClass = LobbyBPClass.Class;
 }
 
 void UHoloringGameInstance::Init()
@@ -69,6 +75,17 @@ void UHoloringGameInstance::LoadEndGameMenuWidget()
 
 	EndGameMenu->Setup();
 	EndGameMenu->SetGameInstance(this);
+}
+
+void UHoloringGameInstance::LoadLobbyWidget()
+{
+	if (!ensure(LobbyClass != nullptr)) return;
+
+	LobbyMenu = CreateWidget<ULobby>(this, LobbyClass);
+	if (!ensure(LobbyMenu != nullptr)) return;
+
+	LobbyMenu->Setup();
+	LobbyMenu->SetGameInstance(this);
 }
 
 void UHoloringGameInstance::Host(FString DesiredServerName)
@@ -141,7 +158,7 @@ void UHoloringGameInstance::OnCreateSessionComplete(FName SessionName, bool Succ
 
 	UWorld* World = GetWorld();
 	if (!ensure(World != nullptr)) return;
-	World->ServerTravel("/Game/Maps/MainLevel/MainLevel?listen");
+	World->ServerTravel("/Game/Maps/Lobby?listen");
 }
 
 void UHoloringGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
@@ -151,6 +168,22 @@ void UHoloringGameInstance::OnDestroySessionComplete(FName SessionName, bool Suc
 		//CreateSession();
 		UE_LOG(LogTemp, Warning, TEXT("Session destroyed!"));
 	}
+}
+
+void UHoloringGameInstance::StartGame()
+{
+	if (LobbyMenu != nullptr)
+	{
+		LobbyMenu->Teardown();
+	}
+
+	UEngine* Engine = GetEngine();
+	if (!ensure(Engine != nullptr)) return;
+	Engine->AddOnScreenDebugMessage(0, 5.f, FColor::Red, TEXT("Started a game"));
+
+	UWorld* World = GetWorld();
+	if (!ensure(World != nullptr)) return;
+	World->ServerTravel("/Game/Maps/MainLevel/MainLevel?listen");
 }
 
 void UHoloringGameInstance::RefreshServerList()
@@ -239,5 +272,6 @@ void UHoloringGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSess
 	if (!ensure(PlayerController != nullptr)) return;
 
 	PlayerController->ClientTravel(*Address, ETravelType::TRAVEL_Absolute);
+
 }
 

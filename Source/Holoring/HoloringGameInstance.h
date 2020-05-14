@@ -26,12 +26,19 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void LoadEndGameMenuWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadLobbyWidget();
 	
 	UFUNCTION(Exec)
 	void Host(FString DesiredServerName);
 
 	UFUNCTION(Exec)
 	void Join(uint32 Index);
+
+	UFUNCTION(Exec)
+	void StartGame();
+
 	void RefreshServerList();
 
 	void DestroySession();
@@ -46,8 +53,10 @@ private:
 
 	TSubclassOf<class UUserWidget> MenuClass;
 	TSubclassOf<class UUserWidget> EndGameMenuClass;
+	TSubclassOf<class UUserWidget> LobbyClass;
 	class UMainMenu* Menu;
 	class UEndGameMenu* EndGameMenu;
+	class ULobby* LobbyMenu;
 
 	IOnlineSessionPtr SessionInterface;
 	FString ServerName;
