@@ -19,16 +19,9 @@ protected:
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UButton* OpenMainMenuButton;
-	
-	UPROPERTY(meta = (BindWidget))
 	class UButton* QuitGameButton;
 
 	// Quits the game
 	UFUNCTION()
 	void QuitGame();
-
-	// Open Main Menu
-	UFUNCTION()
-	void OpenMainMenu();
 };
